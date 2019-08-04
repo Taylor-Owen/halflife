@@ -618,16 +618,16 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 
 	if (!(in_strafe.state & 1))
 	{
-		viewangles[YAW] -= speed*cl_yawspeed->value*CL_KeyState (&in_right);
-		viewangles[YAW] += speed*cl_yawspeed->value*CL_KeyState (&in_left);
+		viewangles[YAW] = 1*CL_KeyState (&in_right);
+		viewangles[YAW] = 180*CL_KeyState (&in_left);
 		viewangles[YAW] = anglemod(viewangles[YAW]);
 	}
-	if (in_klook.state & 1)
+	/*if (in_klook.state & 1)
 	{
 		V_StopPitchDrift ();
 		viewangles[PITCH] -= speed*cl_pitchspeed->value * CL_KeyState (&in_forward);
 		viewangles[PITCH] += speed*cl_pitchspeed->value * CL_KeyState (&in_back);
-	}
+	}*/
 	
 	up = CL_KeyState (&in_lookup);
 	down = CL_KeyState(&in_lookdown);
@@ -638,15 +638,15 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 	if (up || down)
 		V_StopPitchDrift ();
 		
-	if (viewangles[PITCH] > cl_pitchdown->value)
-		viewangles[PITCH] = cl_pitchdown->value;
-	if (viewangles[PITCH] < -cl_pitchup->value)
-		viewangles[PITCH] = -cl_pitchup->value;
+	//if (viewangles[PITCH] > cl_pitchdown->value)
+	//	viewangles[PITCH] = cl_pitchdown->value;
+	//if (viewangles[PITCH] < -cl_pitchup->value)
+	//	viewangles[PITCH] = -cl_pitchup->value;
 
-	if (viewangles[ROLL] > 50)
-		viewangles[ROLL] = 50;
-	if (viewangles[ROLL] < -50)
-		viewangles[ROLL] = -50;
+	// (viewangles[ROLL] > 50)
+		//viewangles[ROLL] = 50;
+	//if (viewangles[ROLL] < -50)
+		//viewangles[ROLL] = -50;
 }
 
 /*

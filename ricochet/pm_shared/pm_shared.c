@@ -2150,6 +2150,7 @@ void PM_LadderMove( physent_t *pLadder )
 
 		if ( pmove->cmd.buttons & IN_BACK )
 		{
+			//viewangles[YAW] = 180.0;
 			forward -= flSpeed;
 		}
 		if ( pmove->cmd.buttons & IN_FORWARD )

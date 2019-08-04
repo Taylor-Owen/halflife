@@ -1620,10 +1620,10 @@ void CBasePlayer::Jump()
 	if ( !FBitSet( m_afButtonPressed, IN_JUMP ) )
 		return;         // don't pogo stick
 
-	if ( !(pev->flags & FL_ONGROUND) || !pev->groundentity )
-	{
-		return;
-	}
+	//if ( !(pev->flags & FL_ONGROUND) || !pev->groundentity )
+	//{
+	//	return;
+	//}
 
 // many features in this function use v_forward, so makevectors now.
 	UTIL_MakeVectors (pev->angles);
@@ -2072,7 +2072,7 @@ void CBasePlayer::CheckTimeBasedDamage()
 		return;
 
 	// only check for time based damage approx. every 2 seconds
-	if (abs(gpGlobals->time - m_tbdPrev) < 2.0)
+	if (fabs(gpGlobals->time - m_tbdPrev) < 2.0)
 		return;
 	
 	m_tbdPrev = gpGlobals->time;

@@ -617,8 +617,11 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 
 	if (!(in_strafe.state & 1))
 	{
-		viewangles[YAW] -= speed*cl_yawspeed->value*CL_KeyState (&in_right);
-		viewangles[YAW] += speed*cl_yawspeed->value*CL_KeyState (&in_left);
+		if (CL_KeyState(&in_forward))
+			viewangles[YAW] = 180;
+		else if (CL_KeyState(&in_back))
+			viewangles[YAW] = 0;
+
 		viewangles[YAW] = anglemod(viewangles[YAW]);
 	}
 	if (in_klook.state & 1)
@@ -692,7 +695,7 @@ void CL_DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int ac
 		if ( !(in_klook.state & 1 ) )
 		{	
 			cmd->forwardmove += cl_forwardspeed->value * CL_KeyState (&in_forward);
-			cmd->forwardmove -= cl_backspeed->value * CL_KeyState (&in_back);
+			cmd->forwardmove += cl_forwardspeed->value * CL_KeyState (&in_back);
 		}	
 
 		// adjust for speed key

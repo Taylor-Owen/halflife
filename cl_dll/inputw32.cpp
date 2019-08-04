@@ -545,11 +545,11 @@ void IN_MouseMove ( float frametime, usercmd_t *cmd)
 
 		if ( (in_mlook.state & 1) && !(in_strafe.state & 1))
 		{
-			viewangles[PITCH] += m_pitch->value * mouse_y;
+			/*viewangles[PITCH] += m_pitch->value * mouse_y;
 			if (viewangles[PITCH] > cl_pitchdown->value)
 				viewangles[PITCH] = cl_pitchdown->value;
 			if (viewangles[PITCH] < -cl_pitchup->value)
-				viewangles[PITCH] = -cl_pitchup->value;
+				viewangles[PITCH] = -cl_pitchup->value;*/
 		}
 		else
 		{
@@ -908,7 +908,7 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 				// y=ax^b; where a = 300 and b = 1.3
 				// also x values are in increments of 800 (so this is factored out)
 				// then bounds check result to level out excessively high spin rates
-				fTemp = 300.0 * pow(abs(fAxisValue) / 800.0, 1.3);
+				fTemp = 300.0 * pow(fabs(fAxisValue) / 800.0, 1.3);
 				if (fTemp > 14000.0)
 					fTemp = 14000.0;
 				// restore direction information

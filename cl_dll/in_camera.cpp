@@ -28,7 +28,7 @@ extern cl_enginefunc_t gEngfuncs;
 #define CAM_DIST_DELTA 1.0
 #define CAM_ANGLE_DELTA 2.5
 #define CAM_ANGLE_SPEED 2.5
-#define CAM_MIN_DIST 30.0
+#define CAM_MIN_DIST 200.0
 #define CAM_ANGLE_MOVE .5
 #define MAX_ANGLE_DIFF 10.0
 #define PITCH_MAX 90.0
@@ -99,7 +99,7 @@ float MoveToward( float cur, float goal, float maxspeed )
 {
 	if( cur != goal )
 	{
-		if( abs( cur - goal ) > 180.0 )
+		if( fabs( cur - goal ) > 180.0 )
 		{
 			if( cur < goal )
 				cur += 360.0;
@@ -172,7 +172,7 @@ void CL_DLLEXPORT CAM_Think( void )
 			break;
 
 		case CAM_COMMAND_TOFIRSTPERSON:
-			CAM_ToFirstPerson();
+			CAM_ToThirdPerson();
 			break;
 
 		case CAM_COMMAND_NONE:
@@ -211,7 +211,7 @@ void CL_DLLEXPORT CAM_Think( void )
 		if (cam_mouse.x>gEngfuncs.GetWindowCenterX())
 		{
 			//if ((camAngles[YAW]>=225.0)||(camAngles[YAW]<135.0))
-			if (camAngles[YAW]<c_maxyaw->value)
+			/*if (camAngles[YAW]<c_maxyaw->value)
 			{
 				camAngles[ YAW ] += (CAM_ANGLE_MOVE)*((cam_mouse.x-gEngfuncs.GetWindowCenterX())/2);
 			}
@@ -219,12 +219,12 @@ void CL_DLLEXPORT CAM_Think( void )
 			{
 				
 				camAngles[YAW]=c_maxyaw->value;
-			}
+			}*/
 		}
 		else if (cam_mouse.x<gEngfuncs.GetWindowCenterX())
 		{
 			//if ((camAngles[YAW]<=135.0)||(camAngles[YAW]>225.0))
-			if (camAngles[YAW]>c_minyaw->value)
+			/*if (camAngles[YAW]>c_minyaw->value)
 			{
 			   camAngles[ YAW ] -= (CAM_ANGLE_MOVE)* ((gEngfuncs.GetWindowCenterX()-cam_mouse.x)/2);
 			   	
@@ -233,7 +233,7 @@ void CL_DLLEXPORT CAM_Think( void )
 			{
 				camAngles[YAW]=c_minyaw->value;
 				
-			}
+			}*/
 		}
 
 		//check for y delta values and adjust accordingly
@@ -377,13 +377,15 @@ void CL_DLLEXPORT CAM_Think( void )
 	}
 	else
 	{
-		if( camAngles[ YAW ] - viewangles[ YAW ] != cam_idealyaw->value )
-			camAngles[ YAW ] = MoveToward( camAngles[ YAW ], cam_idealyaw->value + viewangles[ YAW ], CAM_ANGLE_SPEED );
+		//if( camAngles[ YAW ] - viewangles[ YAW ] != cam_idealyaw->value )
+		//	camAngles[ YAW ] = MoveToward( camAngles[ YAW ], cam_idealyaw->value + viewangles[ YAW ], CAM_ANGLE_SPEED );
+
+		camAngles[YAW] = cam_idealyaw->value;
 
 		if( camAngles[ PITCH ] - viewangles[ PITCH ] != cam_idealpitch->value )
 			camAngles[ PITCH ] = MoveToward( camAngles[ PITCH ], cam_idealpitch->value + viewangles[ PITCH ], CAM_ANGLE_SPEED );
 
-		if( abs( camAngles[ 2 ] - cam_idealdist->value ) < 2.0 )
+		if( fabs( camAngles[ 2 ] - cam_idealdist->value ) < 2.0 )
 			camAngles[ 2 ] = cam_idealdist->value;
 		else
 			camAngles[ 2 ] += ( cam_idealdist->value - camAngles[ 2 ] ) / 4.0;
@@ -452,14 +454,14 @@ void CAM_ToThirdPerson(void)
 		cam_ofs[ 2 ] = CAM_MIN_DIST; 
 	}
 
-	gEngfuncs.Cvar_SetValue( "cam_command", 0 );
+	gEngfuncs.Cvar_SetValue( "cam_command", 1 );
 }
 
 void CAM_ToFirstPerson(void) 
 { 
-	cam_thirdperson = 0;
+	cam_thirdperson = 1;
 	
-	gEngfuncs.Cvar_SetValue( "cam_command", 0 );
+	gEngfuncs.Cvar_SetValue( "cam_command", 1 );
 }
 
 void CAM_ToggleSnapto( void )
@@ -489,11 +491,11 @@ void CAM_Init( void )
 	gEngfuncs.pfnAddCommand( "-camdistance", CAM_EndDistance );
 	gEngfuncs.pfnAddCommand( "snapto", CAM_ToggleSnapto );
 
-	cam_command				= gEngfuncs.pfnRegisterVariable ( "cam_command", "0", 0 );	 // tells camera to go to thirdperson
+	cam_command				= gEngfuncs.pfnRegisterVariable ( "cam_command", "1", 0 );	 // tells camera to go to thirdperson
 	cam_snapto				= gEngfuncs.pfnRegisterVariable ( "cam_snapto", "0", 0 );	 // snap to thirdperson view
-	cam_idealyaw			= gEngfuncs.pfnRegisterVariable ( "cam_idealyaw", "90", 0 );	 // thirdperson yaw
+	cam_idealyaw			= gEngfuncs.pfnRegisterVariable ( "cam_idealyaw", "270", 0 );	 // thirdperson yaw //TODO: HARDCODEEEEEEEEE
 	cam_idealpitch			= gEngfuncs.pfnRegisterVariable ( "cam_idealpitch", "0", 0 );	 // thirperson pitch
-	cam_idealdist			= gEngfuncs.pfnRegisterVariable ( "cam_idealdist", "64", 0 );	 // thirdperson distance
+	cam_idealdist			= gEngfuncs.pfnRegisterVariable ( "cam_idealdist", "200", 0 );	 // thirdperson distance
 	cam_contain				= gEngfuncs.pfnRegisterVariable ( "cam_contain", "0", 0 );	// contain camera to world
 
 	c_maxpitch				= gEngfuncs.pfnRegisterVariable ( "c_maxpitch", "90.0", 0 );
